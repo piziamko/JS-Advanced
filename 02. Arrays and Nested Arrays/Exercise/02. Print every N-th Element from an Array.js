@@ -1,12 +1,22 @@
-function everyNElement(arr, step) {
-    const result = [];
-    for (let i = 0; i < arr.length; i += step) {
-        result.push(arr[i]);
+function solve(array, n) {
+    let result = [];
+    for (let i = 0; i < array.length; i += n) {
+        result.push(array[i]);
     }
-    return result;
+    return(result);
 }
 
-//another solution
+// Variant 2
+
+// function everyNElement(arr, step) {
+//     const result = [];
+//     for (let i = 0; i < arr.length; i += step) {
+//         result.push(arr[i]);
+//     }
+//     return result;
+// }
+
+//Variant 3
 
 // const solve3 = (arr, step) => {
 //     return arr.filter((el, index) => index % step === 0);
