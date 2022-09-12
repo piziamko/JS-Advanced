@@ -1,5 +1,3 @@
-//2.	Print Every N-th Element from an Array 
-
 function everyNElement(arr, step) {
     const result = [];
     for (let i = 0; i < arr.length; i += step) {
@@ -10,9 +8,9 @@ function everyNElement(arr, step) {
 
 //another solution
 
-const solve3 = (arr, step) => {
-    return arr.filter((el, index) => index % step === 0);
-}
+// const solve3 = (arr, step) => {
+//     return arr.filter((el, index) => index % step === 0);
+// }
 
 // console.log(solve3(['5', 
 // '20', 
