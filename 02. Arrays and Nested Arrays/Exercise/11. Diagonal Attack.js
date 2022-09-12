@@ -1,15 +1,23 @@
-// 75/100
+function solve(matrix) {
+    let primaryDiagonalSum = 0;
+    let secondaryDiagonalSum = 0;
+    matrix.forEach((row, index) => matrix[index] = row.split(' ').map(Number));
 
-function foo(arr) {
-    arr = arr.map(x => x.split(" ").map(Number))
-    const getDiagSum = arr => arr.reduce((a, v, i) => a + v[i], 0)
-    const mapToSum = (arr, sum) =>
-        arr.map((x, i) => x.map((y, j) => (j === i || j === x.length - i - 1 ? y : sum)))
-    const print = arr => arr.map(x => x.join(" ")).join("\n")
+    for (let i = 0; i < matrix.length; i++) {
+        primaryDiagonalSum += matrix[i][i];
+        secondaryDiagonalSum += matrix[i][matrix.length - 1 - i];
+    }
 
-	const [reversedMatrix, resultMatrix] = [arr.reverse(), arr.reverse()]
+    if (primaryDiagonalSum === secondaryDiagonalSum) {
+        for (let row= 0; row < matrix.length; row++) {
+            for (let col = 0; col < matrix[row].length; col++) {
+                if (row === col || row + col === matrix.length - 1) {
+                    continue;
+                }
+                matrix[row][col] = primaryDiagonalSum;
+            }
+        }
+    }
 
-    return getDiagSum(resultMatrix) === getDiagSum(reversedMatrix)
-        ? print(mapToSum(resultMatrix, getDiagSum(resultMatrix)))
-        : print(resultMatrix)
+    matrix.forEach(line => console.log(line.join(' ')));
 }
