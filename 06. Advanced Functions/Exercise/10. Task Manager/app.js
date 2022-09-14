@@ -1,103 +1,78 @@
-// I wont waste my time with this particular bull****.
-// I wrote it the worst possible way i could and only then it was 100/100.
-// Judge tests BS on this one. Most of the tests are broken or written by
-// drunk ungraduated "wonderkids", since the same test that says an element is undefined in judge,
-// posted in chrome console, gets the element.
-// Sooo, what it is judge? You mocking? Nah.
-
 function solve() {
-    const getSection = n =>
-        document.querySelector(`body > main > div > section:nth-child(${n}) > div:nth-child(2)`)
-    const html = {
-        task: document.getElementById("task"),
-        description: document.getElementById("description"),
-        date: document.getElementById("date"),
-        open: getSection(2),
-        inProgress: getSection(3),
-        completed: getSection(4),
+    const CONST = {
+        START_BUTTON_CLASS: 'green',
+        START_BUTTON_TITLE: 'Start',
+        DELETE_BUTTON_CLASS: 'red',
+        DELETE_BUTTON_TITLE: 'Delete',
+        FINISH_BUTTON_CLASS: 'orange',
+        FINISH_BUTTON_TITLE: 'Finish',
+        DIV_FOR_BUTTONS_CLASS: 'flex',
+    };
+
+    const [addTaskSectionDiv, openSectionDiv, inProgressSectionDiv, completeSectionDiv] = document.querySelectorAll('div.wrapper section div:last-child');
+
+    const helpers = {
+        createElementWithAttrs(elementName, textContent = '', klass = '') {
+            const el = document.createElement(elementName);
+            el.textContent = textContent;
+            if (klass) el.classList.add(klass);
+            return el;
+        },
+    };
+
+    function add(e) {
+        e.preventDefault();
+        // validate inputs
+        const inputData = Array.from(addTaskSectionDiv.querySelectorAll('input, textarea'));
+        if (inputData.some(x => x.tagName = 'INPUT' ? !x.value.length : !x.textContent.length)) return;
+        // create task
+        const [task, description, dueDate] = inputData.map(x => x.tagName = 'INPUT' ? x.value : x.textContent);
+        const article = document.createElement('article');
+        article.appendChild(helpers.createElementWithAttrs('h3', task));
+        article.appendChild(helpers.createElementWithAttrs('p', `Description: ${description}`));
+        article.appendChild(helpers.createElementWithAttrs('p', `Due Date: ${dueDate}`));
+        const div = helpers.createElementWithAttrs('div', '', CONST.DIV_FOR_BUTTONS_CLASS);
+        div.appendChild(helpers.createElementWithAttrs('button', CONST.START_BUTTON_TITLE, CONST.START_BUTTON_CLASS));
+        div.appendChild(helpers.createElementWithAttrs('button', CONST.DELETE_BUTTON_TITLE, CONST.DELETE_BUTTON_CLASS));
+        article.appendChild(div);
+        // add task (article) in openSectionDiv
+        openSectionDiv.appendChild(article);
     }
-    const isValidInput = arr => arr.every(x => x !== "")
-    const btnComponent = (c, t) => `<button class=${c}>${t}</button>`
-    const btnSectionComp = arrTuples =>
-        `<div class="flex">${arrTuples.map(x => btnComponent(x[0], x[1])).join("")}</div>`
 
-    function firstTemp(h, desc, date, c1, t1, c2, t2) {
-        const wrapper = document.createElement("article")
-        wrapper.innerHTML = `<h3>${h}</h3><p>Description: ${desc}</p><p>Due Date: ${date}</p>
-${
-    c1
-        ? btnSectionComp([
-              [c1, t1],
-              [c2, t2],
-          ])
-        : ""
-}`
+    addTaskSectionDiv.querySelector('button').addEventListener('click', add);
 
-        return wrapper
+    function start(e) {
+        e.preventDefault();
+        // check event target for start button
+        if (e.target.className.trim().toLowerCase() !== CONST.START_BUTTON_CLASS) return;
+        // add finish button
+        e.target.parentElement.appendChild(
+            helpers.createElementWithAttrs('button', CONST.FINISH_BUTTON_TITLE, CONST.FINISH_BUTTON_CLASS));
+        // get clicked article and move it to inProgressSectionDiv
+        inProgressSectionDiv.appendChild(e.target.parentElement.parentElement);
+        // delete start button as last step, e.target === null after
+        e.target.remove();
     }
 
-    document.addEventListener("click", e => {
-        e.preventDefault()
-        if (e.target.tagName === "BUTTON") {
-            const [t, d, date] = [html.task.value, html.description.value, html.date.value]
-            const actions = {
-                "": add,
-                green: e => start(e),
-                orange: e => finish(e),
-                red: e => remove(e),
-            }
+    openSectionDiv.addEventListener('click', start);
 
-            function add() {
-                debugger
-                if (isValidInput([t, d, date])) {
-                    const a = firstTemp(t, d, date, "green", "Start", "red", "Delete")
-                    html.open.appendChild(a)
-                    html.task.value = ""
-                    html.description.value = ""
-                    html.date.value = ""
-                }
-            }
+    function deleting(e) {
+        e.preventDefault();
+        if (e.target.className.trim().toLowerCase() !== CONST.DELETE_BUTTON_CLASS) return;
+        e.target.parentElement.parentElement.remove();
+    }
 
-            function start(e) {
-                debugger
-                let parent = e.parentNode.parentNode
-                const [text, desc, date] = Array.from(parent.children)
-                    .slice(0, 4)
-                    .map(x => x.innerHTML)
-                const a = firstTemp(
-                    text,
-                    desc.split(": ").filter(x => x !== "")[1],
-                    date.split(": ").filter(x => x !== "")[1],
-                    "red",
-                    "Delete",
-                    "orange",
-                    "Finish"
-                )
-                html.inProgress.appendChild(a)
-                parent.outerHTML = ""
-            }
+    openSectionDiv.addEventListener('click', deleting);
+    inProgressSectionDiv.addEventListener('click', deleting);
 
-            function finish(e) {
-                let parent = e.parentNode.parentNode
-                const [text, desc, date] = Array.from(parent.children)
-                    .slice(0, 4)
-                    .map(x => x.innerHTML)
-                const a = firstTemp(
-                    text,
-                    desc.split(": ").filter(x => x !== "")[1],
-                    date.split(": ").filter(x => x !== "")[1]
-                )
-                html.completed.appendChild(a)
-                parent.outerHTML = ""
-            }
+    function finish(e) {
+        e.preventDefault();
+        if (e.target.className.trim().toLowerCase() !== CONST.FINISH_BUTTON_CLASS) return;
+        // first move article
+        completeSectionDiv.appendChild(e.target.parentElement.parentElement);
+        // then delete button's div
+        e.target.parentElement.remove();
+    }
 
-            function remove(e) {
-                let parent = e.parentNode.parentNode
-
-                parent.outerHTML = ""
-            }
-
-            actions[e.target.className](e.target)
-        }
-    })
+    inProgressSectionDiv.addEventListener('click', finish);
 }
