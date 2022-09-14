@@ -47,8 +47,8 @@
 }())
 
 // let str = 'the quick brown fox jumps over the lazy dog';
-console.log(str.length)
-str = str.truncate(45)
+// console.log(str.length)
+// str = str.truncate(45)
 
 
-console.log(str)
+// console.log(str)
