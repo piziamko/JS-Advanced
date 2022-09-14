@@ -1,40 +1,20 @@
 function attachEventsListeners() {
-    const fields = {
-        unitsFrom: document.getElementById("inputUnits"),
-        unitsTo: document.getElementById("outputUnits"),
-        inputValue: document.getElementById("inputDistance"),
-        output: document.getElementById("outputDistance"),
-    }
-    const convert = (v, to, sign) => {
-        const signs = { "/": (a, b) => a / b, "*": (a, b) => a * b }
+    const CONVERTING_RATE_TO_METER = {
+        km: 1000,
+        m: 1,
+        cm: 0.01,
+        mm: 0.001,
+        mi: 1609.34,
+        yrd: 0.9144,
+        ft: 0.3048,
+        in: 0.0254,
+    };
 
-        return signs[sign](v, to)
-    }
-
-    const values = {
-        km: 1,
-        m: 1000,
-        cm: 100000,
-        mm: 1000000,
-        mi: 0.621371,
-        yrd: 1093.61,
-        ft: 3280.84,
-        in: 39370.1,
-    }
-
-    document.body.addEventListener("click", e => {
-        if (e.target.id === "convert") {
-            const [from, to, inputValue] = [
-                fields.unitsFrom.value,
-                fields.unitsTo.value,
-                Number(fields.inputValue.value),
-            ]
-
-            fields.output.value = convert(
-                convert(inputValue, values[from], "/"),
-                values[to],
-                "*"
-            )
-        }
-    })
+    const buttonConvertElement = document.getElementById('convert');
+    buttonConvertElement.addEventListener('click', () => {
+        const [from, to] = document.querySelectorAll('select');
+        const distanceInput = Number(document.getElementById('inputDistance').value);
+        const resultOutputElement = document.getElementById('outputDistance');
+        resultOutputElement.value = distanceInput * CONVERTING_RATE_TO_METER[from.value] / CONVERTING_RATE_TO_METER[to.value];
+    });
 }
