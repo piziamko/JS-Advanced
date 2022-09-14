@@ -61,11 +61,11 @@ function solve() {
 
 
 // let result = solve()
-var guy1 = new result.Junior('pesho', 20);
-var guy2 = new result.Senior('gosho', 21);
-var guy3 = new result.Manager('ivan', 22);
+// var guy1 = new result.Junior('pesho', 20);
+// var guy2 = new result.Senior('gosho', 21);
+// var guy3 = new result.Manager('ivan', 22);
 
-guy3.dividend = 5
-guy3.salary =10
-console.log(guy3.dividend)
-console.log(guy3.collectSalary())
+// guy3.dividend = 5
+// guy3.salary =10
+// console.log(guy3.dividend)
+// console.log(guy3.collectSalary())
