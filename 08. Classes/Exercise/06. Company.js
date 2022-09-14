@@ -36,7 +36,6 @@ class Company {
         }
         
 // Variant 2
-        
         class Company {
     departments = {};
 
@@ -75,15 +74,4 @@ class Company {
     }
 }
 
-        this.departments[department].addEmployee(name, salary, position);
-        return `New employee is hired. Name: ${name}. Position: ${position}`;
-    }
-
-    bestDepartment() {
-        const bestDepartment = Object.values(this.departments)
-            .sort((a, b) => b.getAverageSalary() - a.getAverageSalary())[0];
-        let result = `Best Department is: ${bestDepartment.name}\n`;
-        result += bestDepartment.getDepartmentInfo();
-        return result;
-    }
-}
+        
