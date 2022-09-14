@@ -1,38 +1,27 @@
-function generateReport() {
+    //     Variant 2
+    
+    function generateReport() {
 
-    let inputElements = Array.from(document.getElementsByTagName('input'));
-    console.log(inputElements);
-
-    const resultArr = [];
-    let tableRows = Array.from(document.getElementsByTagName('tr'));
-    console.log(tableRows[0].children[0]);
-
-    console.log(tableRows[0].children[0].children[0]);
-
-    const checkedCols = [];
-
-    for (let i = 0; i < tableRows.length; i++) {
-        const row = tableRows[i];
-        const obj = {};
-
-        for (let y = 0; y < row.children.length; y++) {
-            const element = row.children[y];
-            if (i == 0) {
-                if (element.children[0].checked) {
-                    checkedCols.push(y);
-                }
-                continue;
-            }
-
-            if (checkedCols.includes(y)) {
-                let propertyName = inputElements[y].name;
-                obj[propertyName] = element.textContent;
-            }
+    const thInput = Array.from(document.querySelectorAll('thead input'));
+    const keys = {};
+    thInput.forEach((x, i) => {
+        if (x.checked) {
+            keys[x.name] = i;
         }
-        if (i !== 0) {
-            resultArr.push(obj);
-        }
+    });
+
+    let result = [];
+
+    const rows = Array.from(document.querySelectorAll('tbody tr'));
+
+    for (const row of rows) {
+        const td = Array.from(row.children);
+        let currentObj = Object.fromEntries(Object.entries(keys).map(kvp => [kvp[0], td[kvp[1]].textContent]));
+        result.push(currentObj);
     }
+
+    document.getElementById('output').textContent = JSON.stringify(result);
+}
 
     document.getElementById('output').value = JSON.stringify(resultArr);
 
