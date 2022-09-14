@@ -1,6 +1,5 @@
 function solution() {
 
-
     class Balloon {
         constructor(color, hasWeight) {
             this.color = color;
@@ -31,16 +30,15 @@ function solution() {
         }
     }
 
-
     return { Balloon, PartyBalloon, BirthdayBalloon };
 }
 
 
 // let a = solve()
-let class1 = new a.Balloon('red', 45)
-console.log(class1);
-let class2 = new a.PartyBalloon('red', 45, 'blue', 1000)
-console.log(class2);
-let class3 = new a.BirthdayBalloon('red', 45, 'purple', 10, 'text')
+// let class1 = new a.Balloon('red', 45)
+// console.log(class1);
+// let class2 = new a.PartyBalloon('red', 45, 'blue', 1000)
+// console.log(class2);
+// let class3 = new a.BirthdayBalloon('red', 45, 'purple', 10, 'text')
 
-console.log(class3.ribbon);
+// console.log(class3.ribbon);
