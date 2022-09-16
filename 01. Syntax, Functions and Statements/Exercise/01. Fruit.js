@@ -1,6 +1,8 @@
-function solve(type, grams, price){
-    const kg = grams / 1000;
-    console.log(`I need $${(price * kg).toFixed(2)} to buy ${kg.toFixed(2)} kilograms ${type}.`)
+function solve(type, weight, price){
+    let weightInKg = weight / 1000;
+    let totalMoney = weightInKg * price;
+    console.log(`I need $${(totalMoney.toFixed(2))} to buy ${weightInKg.toFixed(2)} kilograms ${type}.`)
 }
 
 //solve('orange', 2500, 1.80);
+//solve('apple', 1563, 2.35);
