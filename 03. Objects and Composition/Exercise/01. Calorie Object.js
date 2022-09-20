@@ -7,7 +7,6 @@ function calorie(arr) {
 
     return result;
 }
-// console.log(calorie(
-//     ['Yoghurt', '48', 'Rise', '138', 'Apple', '52']
-// ));
-
+console.log(calorie(
+    ['Yoghurt', '48', 'Rise', '138', 'Apple', '52']
+));
