@@ -1,4 +1,3 @@
-
 function create(words) {
     for (let word of words) {
         let div = document.createElement("div");
