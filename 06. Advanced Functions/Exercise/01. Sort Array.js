@@ -1,14 +1,6 @@
-// function sort(array, argument) {
-//     const sort = {
-//         asc: (array) => array.sort((a, b) => a - b),
-//         desc: (array) => array.sort((a, b) => b - a)
-//     };
-
-//     return sort[argument](array);
-// }
-
-// Variant 2
-
-function sorting(array, order) {
-    return array.sort((a, b) => order === 'asc' ? a - b : b - a);
+function sorting(arr, type) {
+    return type === 'asc' ? arr.sort((a, b) => a - b) : arr.sort((a, b) => b - a);
 }
+
+console.log(sorting([14, 7, 17, 6, 8], 'asc'));
+console.log(sorting([14, 7, 17, 6, 8], 'desc'));
