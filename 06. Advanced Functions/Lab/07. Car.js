@@ -1,23 +1,23 @@
-function solve(commands) {
-    let cars = {};
+function solve(commandsArray) {
+    let carsList = {};
 
-    let obj = {
-        create: (name, inherits, value) =>
-            (cars[name] = inherits ? Object.create(cars[value]) : {}),
-
-        set: (name, key, value) => (cars[name][key] = value),
-        print: name => {
-            let entry = []
-            for (let key in cars[name]) {
-                entry.push(`${key}:${cars[name][key]}`)
+    let commands = {
+        create: (carName, inherits, carToInherit) => carsList[carName] = inherits !== undefined ?  Object.create(carsList[carToInherit]) : {},
+        set: (carName, key, value) => carsList[carName][key] = value,
+        print: (carName) => {
+            let properties = [];
+            for (const property in carsList[carName]) {
+                properties.push(`${property}:${carsList[carName][property]}`);
             }
-            console.log(entry.join(", "))
+
+            console.log(properties.join(','));
         }
     }
-    
-    for (let command of commands) {
-        let [cmd, name, key, value] = command.split(" ");
-        obj[cmd](name, key, value)
+
+    for (const commandLine of commandsArray) {
+        let [command, carName, paramOne, paramTree] = commandLine.split(' ');
+
+        commands[command](carName, paramOne, paramTree);
     }
 }
 
@@ -27,4 +27,4 @@ solve(['create c1',
     'set c2 model new',
     'print c1',
     'print c2']
-)
+);
