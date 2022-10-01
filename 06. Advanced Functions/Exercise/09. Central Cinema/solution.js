@@ -1,125 +1,70 @@
 function solve() {
-    function onScreen(e) {
-        e.preventDefault();
-        const movieInputElements = document.querySelectorAll('#container input');
-        const data = Array.from(movieInputElements)
-            .map(x => x.value);
-        if (data.some(x => !x.length) || isNaN(Number(data[2]))) return;
-        for (const input of movieInputElements) input.value = '';
-        const [name, hall, price] = data;
-        document.querySelector('#movies ul').innerHTML +=
-            `<li>
-               <span>${name}</span>
-               <strong>Hall: ${hall}</strong>
-               <div>
-                    <strong>${Number(price).toFixed(2)}</strong>
-                    <input placeholder="Tickets Sold">
-                    <button>Archive</button>
-               </div>
-            </li>`;
-    }
-    document.querySelector('#container button').addEventListener('click', onScreen);
+    let taskElement = document.querySelector('#task');
+    let descriptionElement = document.querySelector('#description');
+    let dateElement = document.querySelector('#date');
+    let addButtonElement = document.querySelector('#add');
 
-    function archive(e) {
-        e.preventDefault();
-        const liElement = e.target.parentElement.parentElement;
-        const soldTickets = liElement.querySelector('input').value;
-        if (e.target.tagName.toLowerCase() !== 'button' || soldTickets.length === 0 || isNaN(Number(soldTickets))) return;
-        const buttonElement = liElement.querySelector('button');
-        const divToDelete = liElement.querySelector('div');
-        const sellsIncome = Number(soldTickets) * Number(liElement.querySelector('div strong').textContent);
-        buttonElement.textContent = 'Delete';
-        liElement.removeChild(divToDelete);
-        liElement.appendChild(buttonElement);
-        liElement.querySelector('strong').textContent = `Total amount: ${sellsIncome.toFixed(2)}`;
-        document.querySelector('#archive ul').appendChild(liElement);
-    }
+    let sections = document.querySelectorAll('section');
+    let openSection = sections[1];
+    let inProgressSection = sections[2];
+    let completeSection = sections[3];
 
-    document.getElementById('movies').addEventListener('click', archive);
+    addButtonElement.addEventListener('click', addTask);
 
-    function deleting(e) {
-        e.preventDefault();
-        if (e.target.tagName.toLowerCase() === 'button') e.target.parentElement.remove();
-    }
-    document.querySelector('#archive ul').addEventListener('click', deleting);
+    function createElement(type, text, className) {
+        let result = document.createElement(type);
+        result.textContent = text;
 
-    function deleteAll(e) {
-        e.preventDefault();
-        e.currentTarget.previousElementSibling.innerHTML = ''   }
-    document.querySelector('#archive > button').addEventListener('click', deleteAll)
-}
-
-// Variant 2 
-
-function solve() {
-    const getInputField = n =>
-        document.querySelector(`#container > input[type=text]:nth-child(${n})`)
-    const inputs = [getInputField(1), getInputField(2), getInputField(3)]
-    const html = {
-        moviesList: document.querySelector("#movies > ul"),
-        archivesList: document.querySelector("#archive > ul"),
-    }
-
-    const checkValidInput = (arr, num) =>
-        arr.every(x => x !== "") && !isNaN(Number(num))
-    const clearInputs = arr => arr.map(x => (x.value = ""))
-
-    function onScreenTemplate(n, h, p) {
-        const wrapper = document.createElement("li")
-
-        wrapper.innerHTML = `<span>${n}</span><strong>Hall: ${h}</strong>
-<div><strong>${p.toFixed(2)}</strong><input placeholder="Tickets Sold"/>
-<button>Archive</button></div>`
-
-        return wrapper
-    }
-
-    function archivedTemplate(n, p) {
-        const wrapper = document.createElement("li")
-
-        wrapper.innerHTML = `<span>${n}</span>
-<strong>Total amount: ${p.toFixed(2)}</strong>
-<button>Delete</button>`
-
-        return wrapper
-    }
-
-    document.addEventListener("click", e => {
-        e.preventDefault()
-
-        if (e.target.tagName === "BUTTON") {
-            const [n, h, p] = inputs.map(x => x.value)
-
-            const buttons = {
-                "On Screen": () => {
-                    if (checkValidInput([n, h, p], p)) {
-                        clearInputs(inputs)
-                        html.moviesList.appendChild(
-                            onScreenTemplate(n, h, Number(p))
-                        )
-                    }
-                },
-                Archive: e => {
-                    const ticketsSold = e.previousElementSibling.value
-
-                    if (checkValidInput([ticketsSold], ticketsSold)) {
-                        const parent = e.parentNode.parentNode
-                        const name = parent.children[0].innerHTML
-                        const price =
-                            e.previousElementSibling.previousElementSibling
-                                .innerHTML
-
-                        html.archivesList.appendChild(
-                            archivedTemplate(name, ticketsSold * Number(price))
-                        )
-                        parent.remove()
-                    }
-                },
-                Delete: e => e.parentNode.remove(),
-                Clear: () => (html.archivesList.innerHTML = ""),
-            }
-
-            buttons[e.target.textContent](e.target)
+        if (className) {
+            result.className = className;
         }
-    })
+        return result;
+    }
+
+    function addTask(e) {
+        e.preventDefault();
+
+        if (taskElement.value === '' || descriptionElement.value === '' || dateElement.value === '') {
+            return;
+        }
+
+        let articleCreate = createElement('article');
+        let h3Create = createElement('h3', taskElement.value);
+        let p1Create = createElement('p', 'Description: ' + descriptionElement.value);
+        let p2Create = createElement('p', 'Due Date: ' + dateElement.value);
+        let divCreate = createElement('div', undefined, 'flex');
+
+        let startButton = createElement('button', 'Start', 'green');
+        let deleteButton = createElement('button', 'Delete', 'red');
+
+        articleCreate.appendChild(h3Create);
+        articleCreate.appendChild(p1Create);
+        articleCreate.appendChild(p2Create);
+
+        divCreate.appendChild(startButton);
+        divCreate.appendChild(deleteButton);
+        articleCreate.appendChild(divCreate);
+
+        openSection.children[1].appendChild(articleCreate);
+        
+        taskElement.value = '';
+        descriptionElement.value = '';
+        dateElement.value = '';
+
+        startButton.addEventListener('click', () => {
+            inProgressSection.children[1].appendChild(articleCreate);
+            let finishButton = createElement('button', 'Finish', 'orange');
+            divCreate.appendChild(finishButton);
+            startButton.remove();
+
+            finishButton.addEventListener('click', () => {
+                completeSection.children[1].appendChild(articleCreate);
+                divCreate.remove();
+            })
+        });
+
+        deleteButton.addEventListener('click', () => {
+            articleCreate.remove();
+        });
+    }
 }
