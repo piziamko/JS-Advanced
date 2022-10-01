@@ -1,15 +1,17 @@
 function solve(input) {
-    let arr = []
+    let processor = (function () {
+        let innerCollection = [];
+        return {
+            add: (item) => innerCollection.push(item),
+            remove: (item) => innerCollection = innerCollection.filter(x => x !== item),
+            print: () => console.log(innerCollection.join(",")),
+        }
+    })();
 
-    let obj = {
-        add: str => arr.push(str),
-        remove: str => (arr = arr.filter(x => x !== str)),
-        print: () => console.log(arr.join(",")),
+    for (let data of input) {
+        let [command, text] = data.split(" ");
+        processor[command](text);
     }
-
-    input.forEach(x => {
-        const [command, value] = x.split(" ")
-
-        obj[command](value)
-    })
 }
+solve(['add hello', 'add again', 'remove hello', 'add again', 'print'])
+solve(['add pesho', 'add george', 'add peter', 'remove peter', 'print'])
