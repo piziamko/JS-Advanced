@@ -1,78 +1,86 @@
 function solve() {
-    const CONST = {
-        START_BUTTON_CLASS: 'green',
-        START_BUTTON_TITLE: 'Start',
-        DELETE_BUTTON_CLASS: 'red',
-        DELETE_BUTTON_TITLE: 'Delete',
-        FINISH_BUTTON_CLASS: 'orange',
-        FINISH_BUTTON_TITLE: 'Finish',
-        DIV_FOR_BUTTONS_CLASS: 'flex',
-    };
+    let movieElement = document.querySelector('#container input:nth-of-type(1)');
+    let hallElement = document.querySelector('#container input:nth-of-type(2)');
+    let priceElement = document.querySelector('#container input:nth-of-type(3)');
+    let onScreenBtn = document.querySelector('#container button');
+    let clearBtn = document.querySelector('#archive button');
 
-    const [addTaskSectionDiv, openSectionDiv, inProgressSectionDiv, completeSectionDiv] = document.querySelectorAll('div.wrapper section div:last-child');
+    let moviesOnScreen = document.querySelector('#movies ul');
+    let archive = document.querySelector('#archive ul');
 
-    const helpers = {
-        createElementWithAttrs(elementName, textContent = '', klass = '') {
-            const el = document.createElement(elementName);
-            el.textContent = textContent;
-            if (klass) el.classList.add(klass);
-            return el;
-        },
-    };
-
-    function add(e) {
-        e.preventDefault();
-        // validate inputs
-        const inputData = Array.from(addTaskSectionDiv.querySelectorAll('input, textarea'));
-        if (inputData.some(x => x.tagName = 'INPUT' ? !x.value.length : !x.textContent.length)) return;
-        // create task
-        const [task, description, dueDate] = inputData.map(x => x.tagName = 'INPUT' ? x.value : x.textContent);
-        const article = document.createElement('article');
-        article.appendChild(helpers.createElementWithAttrs('h3', task));
-        article.appendChild(helpers.createElementWithAttrs('p', `Description: ${description}`));
-        article.appendChild(helpers.createElementWithAttrs('p', `Due Date: ${dueDate}`));
-        const div = helpers.createElementWithAttrs('div', '', CONST.DIV_FOR_BUTTONS_CLASS);
-        div.appendChild(helpers.createElementWithAttrs('button', CONST.START_BUTTON_TITLE, CONST.START_BUTTON_CLASS));
-        div.appendChild(helpers.createElementWithAttrs('button', CONST.DELETE_BUTTON_TITLE, CONST.DELETE_BUTTON_CLASS));
-        article.appendChild(div);
-        // add task (article) in openSectionDiv
-        openSectionDiv.appendChild(article);
+    function createElement(type, text) {
+        let result = document.createElement(type);
+        if (text) {
+            result.textContent = text;
+        }
+        return result;
     }
 
-    addTaskSectionDiv.querySelector('button').addEventListener('click', add);
-
-    function start(e) {
+    onScreenBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        // check event target for start button
-        if (e.target.className.trim().toLowerCase() !== CONST.START_BUTTON_CLASS) return;
-        // add finish button
-        e.target.parentElement.appendChild(
-            helpers.createElementWithAttrs('button', CONST.FINISH_BUTTON_TITLE, CONST.FINISH_BUTTON_CLASS));
-        // get clicked article and move it to inProgressSectionDiv
-        inProgressSectionDiv.appendChild(e.target.parentElement.parentElement);
-        // delete start button as last step, e.target === null after
-        e.target.remove();
-    }
 
-    openSectionDiv.addEventListener('click', start);
+        let movie = movieElement.value;
+        let hall = hallElement.value;
+        let price = priceElement.value;
 
-    function deleting(e) {
-        e.preventDefault();
-        if (e.target.className.trim().toLowerCase() !== CONST.DELETE_BUTTON_CLASS) return;
-        e.target.parentElement.parentElement.remove();
-    }
+        movieElement.value = '';
+        hallElement.value = '';
+        priceElement.value = '';
 
-    openSectionDiv.addEventListener('click', deleting);
-    inProgressSectionDiv.addEventListener('click', deleting);
+        if (!movie || !hall) {
+            return;
+        }
+        if (price === '' || Number.isNaN(Number(price))) {
+            return;
+        }
+        price = Number(price);
 
-    function finish(e) {
-        e.preventDefault();
-        if (e.target.className.trim().toLowerCase() !== CONST.FINISH_BUTTON_CLASS) return;
-        // first move article
-        completeSectionDiv.appendChild(e.target.parentElement.parentElement);
-        // then delete button's div
-        e.target.parentElement.remove();
-    }
+        let li = createElement('li');
+        let span = createElement('span', movie);
+        let strong = createElement('strong', `Hall: ${hall}`);
 
-    inProgressSectionDiv.addEventListener('click', finish);
+        let div = createElement('div');
+        let strongPrice = createElement('strong', price.toFixed(2));
+        let inputSoldTickets = createElement('input');
+        inputSoldTickets.placeholder = 'Tickets Sold';
+        let archiveBtn = createElement('button', 'Archive');
+
+        div.appendChild(strongPrice);
+        div.appendChild(inputSoldTickets);
+        div.appendChild(archiveBtn);
+
+        li.appendChild(span);
+        li.appendChild(strong);
+        li.appendChild(div);
+
+        moviesOnScreen.appendChild(li);       
+
+        archiveBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            if (inputSoldTickets.value === '' || Number.isNaN(Number(inputSoldTickets.value))) {
+                return;
+            }
+
+            li.removeChild(strong);
+            li.removeChild(div);
+
+            let totalPrice = (Number(inputSoldTickets.value) * Number(strongPrice.textContent)).toFixed(2);
+            let archiveStrong = createElement('strong', `Total amount: ${totalPrice}`);
+            let deleteBtn = createElement('button', 'Delete');
+
+            li.appendChild(archiveStrong);
+            li.appendChild(deleteBtn);
+
+            archive.appendChild(li);
+
+            deleteBtn.addEventListener('click', () => {
+                li.remove();
+            })
+
+            clearBtn.addEventListener('click', () => {
+                archive.innerHTML = '';
+            })
+        })
+    })
 }
