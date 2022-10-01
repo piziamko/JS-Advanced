@@ -1,21 +1,19 @@
 function calculator() {
-    const html = { s1: "", s2: "", output: "" }
-
-    function calc(a, b, sign) {
-        const signs = { "+": (a, b) => a + b, "-": (a, b) => a - b }
-
-        return signs[sign](Number(a), Number(b))
-    }
-
     return {
-        init: (a, b, c) => {
-            html.s1 = document.querySelector(a)
-            html.s2 = document.querySelector(b)
-            html.output = document.querySelector(c)
+        init(selector1, selector2, resultSelector) {
+            firstElement = document.querySelector(selector1);
+            secondElement = document.querySelector(selector2);
+            resultElement = document.querySelector(resultSelector);
         },
-        add: () =>
-            (html.output.value = calc(html.s1.value, html.s2.value, "+")),
-        subtract: () =>
-            (html.output.value = calc(html.s1.value, html.s2.value, "-")),
+        add: () => {
+            resultElement.value = Number(firstElement.value) + Number(secondElement.value);
+        },
+        subtract: () => {
+            resultElement.value = Number(firstElement.value) - Number(secondElement.value);
+        }
     }
 }
+
+
+// const calculate = calculator();
+// calculate.init('#num1', '#num2', '#result');
