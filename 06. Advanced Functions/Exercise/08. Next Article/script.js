@@ -1,28 +1,13 @@
-function getArticleGenerator(articles) {
-    const output = document.getElementById("content")
-    const ourCopy = articles.slice()
-
-    return function showNext(arr = []) {
-        if (ourCopy[0] !== undefined) {
-            const article = document.createElement("article")
-            article.innerHTML = ourCopy.shift()
-            output.appendChild(article)
-        }
-
-        return showNext
-    }
-}
-
-// Variant 2 
-
-function getArticleGenerator(articles) {
-    const ID_CONTENT_DIV = 'content';
+function getArticleGenerator(input) {
+    let articles = input;
+    let divElement = document.querySelector('#content');
 
     return () => {
-        if (!articles.length) return;
-
-        const articleElement = document.createElement('article');
-        articleElement.textContent = articles.shift();
-        document.getElementById(ID_CONTENT_DIV).appendChild(articleElement);
-    };
+        if (articles.length) {
+            let createArticle = document.createElement('article');
+            createArticle.textContent = articles.shift();
+            createArticle.style.display = 'block';
+            divElement.appendChild(createArticle);
+        }
+    }
 }
