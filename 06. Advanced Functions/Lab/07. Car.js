@@ -1,22 +1,30 @@
-function cars(input) {
-    const data = {}
+function solve(commands) {
+    let cars = {};
 
-    const res = {
+    let obj = {
         create: (name, inherits, value) =>
-            (data[name] = inherits ? Object.create(data[value]) : {}),
-        set: (name, k, v) => (data[name][k] = v),
+            (cars[name] = inherits ? Object.create(cars[value]) : {}),
+
+        set: (name, key, value) => (cars[name][key] = value),
         print: name => {
-            const entry = []
-            for (const key in data[name]) {
-                entry.push(`${key}:${data[name][key]}`)
+            let entry = []
+            for (let key in cars[name]) {
+                entry.push(`${key}:${cars[name][key]}`)
             }
-            console.log(entry.join(","))
-        },
+            console.log(entry.join(", "))
+        }
     }
-
-    input.forEach(x => {
-        const [c, n, k, v] = x.split(" ")
-
-        res[c](n, k, v)
-    })
+    
+    for (let command of commands) {
+        let [cmd, name, key, value] = command.split(" ");
+        obj[cmd](name, key, value)
+    }
 }
+
+solve(['create c1',
+    'create c2 inherit c1',
+    'set c1 color red',
+    'set c2 model new',
+    'print c1',
+    'print c2']
+)
