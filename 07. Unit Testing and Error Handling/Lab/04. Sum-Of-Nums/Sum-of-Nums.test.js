@@ -1,5 +1,5 @@
 // const { expect } = require('chai')
-// const sum = require('./04. Sum-Of-fNums')
+// const sum = require('./04. Sum-Of-Nums')
 
 describe('Sum of Numbers Tests', () => {
     it('should take an array as an argument', () => {
