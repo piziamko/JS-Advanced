@@ -6,4 +6,7 @@ function sum(arr) {
     return sum
 }
 
-// module.exports =  sum;
+let arr = [1, 2];
+sum(arr);
+
+module.exports = sum;
