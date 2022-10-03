@@ -6,4 +6,4 @@ function sum(arr) {
     return sum
 }
 
-module.exports =  sum;
+// module.exports =  sum;
