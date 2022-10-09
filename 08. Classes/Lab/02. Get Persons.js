@@ -20,4 +20,4 @@ function GetPersons() {
     return [anna, softUni, stephan, gabriel]
 }
 
-// console.log(GetPersons().toString());
+console.log(GetPersons().toString());
