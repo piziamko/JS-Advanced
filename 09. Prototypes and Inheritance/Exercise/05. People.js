@@ -1,71 +1,82 @@
-function solve() {
-
-    class Employee {
-
-        constructor(name, age) {
-            if (new.target === Employee) {
-                throw new Error("Canot instansiate directly.")
-            }
-            this.name = name
-            this.age = age
-            this.salary = 0
-            this.tasks = []
-        }
-        work() {
-            let currentTask = this.tasks.shift()
-            console.log(this.name + currentTask)
-            this.tasks.push(currentTask)
-        }
-        collectSalary() {
-
-            if (this instanceof Manager) {
-                console.log(`${this.name} received ${this.salary + this.dividend} this month.`)
-            } else {
-                console.log(`${this.name} received ${this.salary} this month.`)
-            }
-
-        }
-
-    }
-    class Junior extends Employee {
-        constructor(name, age) {
-            super(name, age)
-            this.tasks.push(` is working on a simple task.`)
-        }
-    }
-    class Senior extends Employee {
-        constructor(name, age) {
-            super(name, age)
-            this.tasks.push(` is working on a complicated task.`)
-            this.tasks.push(` is taking time off work.`)
-            this.tasks.push(` is supervising junior workers.`)
-        }
-    }
-    class Manager extends Employee {
-        constructor(name, age) {
-            super(name, age)
-            this.dividend = 0
-            this.tasks.push(` scheduled a meeting.`)
-            this.tasks.push(` is preparing a quarterly report.`)
-        }
+function solution() {
+  class Employee {
+    constructor(name, age) {
+      this.name = name;
+      this.age = age;
+      this.salary = 0;
+      this.tasks = [];
+      this._index = 0;
     }
 
+    work() {
+      if (this._index === this.tasks.length) {
+        this._index = 0;
+      }
 
-    return {
-        Employee,
-        Junior,
-        Senior,
-        Manager
+      console.log(this.tasks[this._index]);
+      this._index++;
     }
+    collectSalary() {
+      console.log(`${this.name} received ${this.salary} this month.`);
+    }
+  }
+  class Junior extends Employee {
+    constructor(name, age) {
+      super(name, age);
+      this.tasks = [`${this.name} is working on a simple task.`];
+    }
+  }
+  class Senior extends Employee {
+    constructor(name, age) {
+      super(name, age);
+      this.tasks = [
+        `${this.name} is working on a complicated task.`,
+        `${this.name} is taking time off work.`,
+        `${this.name} is supervising junior workers.`,
+      ];
+    }
+  }
+  class Manager extends Employee {
+    constructor(name, age) {
+      super(name, age);
+      this.dividend = 0;
+      this.tasks = [
+        `${this.name} scheduled a meeting.`,
+        `${this.name} is preparing a quarterly report.`,
+      ];
+    }
+    collectSalary() {
+      console.log(
+        `${this.name} received ${this.salary + this.dividend} this month.`
+      );
+    }
+  }
+
+  return { Employee, Junior, Senior, Manager };
 }
 
+const classes = solution();
+const junior = new classes.Junior("Ivan", 25);
 
-// let result = solve()
-// var guy1 = new result.Junior('pesho', 20);
-// var guy2 = new result.Senior('gosho', 21);
-// var guy3 = new result.Manager('ivan', 22);
+junior.work();
+junior.work();
 
-// guy3.dividend = 5
-// guy3.salary =10
-// console.log(guy3.dividend)
-// console.log(guy3.collectSalary())
+junior.salary = 1200;
+junior.collectSalary();
+
+const sinior = new classes.Senior("Alex", 31);
+
+sinior.work();
+sinior.work();
+sinior.work();
+sinior.work();
+
+sinior.salary = 12050;
+sinior.collectSalary();
+
+const manager = new classes.Manager("Tom", 55);
+
+manager.salary = 15000;
+manager.collectSalary();
+manager.dividend = 2500;
+manager.collectSalary();  
