@@ -1,54 +1,53 @@
-(function () {
-    String.prototype.ensureStart = function (str) {
-        if (!this.startsWith(str)) {
-            return str + this
-        }
-        return this.slice(0)
+(function solve() {
+  String.prototype.ensureStart = function (str) {
+    if (!this.startsWith(str)) {
+      return str.concat(this);
     }
-    String.prototype.ensureEnd = function (str) {
-        if (!this.endsWith(str)) {
-            return this + str
-        }
-        return this.slice(0)
+    return this.toString();
+  };
+  String.prototype.ensureEnd = function (str) {
+    if (!this.endsWith(str)) {
+      return this.concat(str);
     }
-    String.prototype.isEmpty = function () {
-        return this == '' ? true : false
+    return this.toString();
+  };
+  String.prototype.isEmpty = function () {
+    return this.length == 0 ? true : false;
+  };
+  String.prototype.truncate = function (n) {
+    if (n < 4) {
+      return ".".repeat(n);
     }
-    String.prototype.truncate = function (n) {
-        if (this.length <= n) {
-            return this.slice(0)
-        } else if (n < 4) {
-            return '.'.repeat(n)
-        }
-        else if (this.length > n) {
-            let isSpaces = this.split(' ').length > 1
-            if (isSpaces) {
-                let index = this.substring(0, n).trim().lastIndexOf(' ')
-                if (index != -1) {
-                    return this.substring(0, index) + '...'
-                } else {
-                    return this.substring(0, n) + '...'
-                }
-            } else {
-                n = this.endsWith('...') ? n + 3 : n
-                return this.slice(0, -n) + '...'
-            }
-        }
-    }
-    String.format = function (str, ...params) {
-        params.forEach((el, i) => {
-            if (str.includes(`{${i}}`)) {
-                str = str.replace(`{${i}}`, el)
-            }
-        })
-        return str
+    if (this.toString().length <= n) {
+      return this.toString();
     }
 
-}())
+    let lastSpace = this.toString()
+      .substring(0, n - 2)
+      .lastIndexOf(" ");
 
-// let str = 'the quick brown fox jumps over the lazy dog';
-// console.log(str.length)
-// str = str.truncate(45)
+    if (lastSpace != -1) {
+      return `${this.toString().substring(0, lastSpace)}...`;
+    } else {
+      return `${this.toString().substring(0, n - 3)}...`;
+    }
+  };
+  String.format = function (str, ...params) {
+    for (let i = 0; i < params.length; i++) {
+      str = str.replace(`{${i}}`, params[i]);
+    }
+    return str;
+  };
+})();
 
-
-// console.log(str)
+var str = "quick brown fox jumps over the lazy dog";
+str = str.ensureStart("the ");
+str = str.ensureStart("the ");
+str = str.ensureStart('hello ');
+str = str.truncate(16);
+str = str.truncate(14);
+str = str.truncate(8);
+str = str.truncate(4);
+str = str.truncate(2);
+str = String.format('The {0} {1} fox', 'quick', 'brown');
+str = String.format('jumps {0} {1}', 'dog');
