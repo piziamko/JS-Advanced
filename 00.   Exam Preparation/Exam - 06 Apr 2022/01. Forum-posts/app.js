@@ -1,3 +1,5 @@
+// window.addEventListener("load", solve);
+
 function solve() {
   document.getElementById("publish-btn").addEventListener("click", createPost);
   document.getElementById("clear-btn").addEventListener("click", clearPost);
@@ -8,6 +10,7 @@ function solve() {
   let reviewSection = document.getElementById("review-list");
   let approveSection = document.getElementById("published-list");
   
+
   function createPost(event) {
     let titleValue = title.value;
     let categoryValue = category.value;
