@@ -8,7 +8,6 @@ function solve() {
   let reviewSection = document.getElementById("review-list");
   let approveSection = document.getElementById("published-list");
   
-
   function createPost(event) {
     let titleValue = title.value;
     let categoryValue = category.value;
