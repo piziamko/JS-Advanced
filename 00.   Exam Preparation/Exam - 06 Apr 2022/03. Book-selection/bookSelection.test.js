@@ -1,3 +1,76 @@
+// let bookSelection = require("./bookSelection.js");
+// let { assert } = require("chai");
+
+describe("Tests for bookSelection", function () {
+  describe("Test for isGenreSuitable", () => {
+    function concatenateStr(genre, age) {
+      return `Books with ${genre} genre are not suitable for kids at ${age} age`;
+    }
+    it("wrong genre", () => {
+      let expectText = concatenateStr("Thriller", 12);
+      assert.equal(bookSelection.isGenreSuitable("Thriller", 12), expectText);
+      expectText = concatenateStr("Horror", 12);
+      assert.equal(bookSelection.isGenreSuitable("Horror", 12), expectText);
+    });
+    it("correct genre and correct age", () => {
+      let expText = "Those books are suitable";
+      assert.equal(bookSelection.isGenreSuitable("Thriller", 13), expText);
+      assert.equal(bookSelection.isGenreSuitable("Thriller", 25), expText);
+      assert.equal(bookSelection.isGenreSuitable("Horror", 13), expText);
+      assert.equal(bookSelection.isGenreSuitable("Horror", 25), expText);
+      assert.equal(bookSelection.isGenreSuitable("Comedy", 25), expText);
+      assert.equal(bookSelection.isGenreSuitable("Comedy"), expText);
+    });
+  });
+  
+  describe("Test for isItAffordable", () => {
+    it("Don't have enough money", () => {
+      assert.equal(bookSelection.isItAffordable(11, 10), "You don't have enough money");
+      assert.equal(bookSelection.isItAffordable(51, 50), "You don't have enough money");
+    });
+    it("Book bought", () => {
+      assert.equal(bookSelection.isItAffordable(10, 11), "Book bought. You have 1$ left");
+      assert.equal(bookSelection.isItAffordable(10, 10), "Book bought. You have 0$ left");
+      assert.equal(bookSelection.isItAffordable(10, 50), "Book bought. You have 40$ left");
+    });
+    it("Wrong data type", () => {
+        assert.throw(() => {bookSelection.isItAffordable("pesho", 10)}, "Invalid input");
+        assert.throw(() => {bookSelection.isItAffordable("pesho", "gosho");}, "Invalid input");
+        assert.throw(() => {bookSelection.isItAffordable("10", "10");}, "Invalid input");
+        assert.throw(() => {bookSelection.isItAffordable(10, "10");}, "Invalid input");
+    });
+  });
+  
+  describe("Test for suitableTitles", () => {
+    it("Wrong data type", () => {
+      assert.throw(() => bookSelection.suitableTitles("gosho", "pesho"), "Invalid input");
+      assert.throw(() => bookSelection.suitableTitles(10, "pesho"), "Invalid input");
+      assert.throw(() => bookSelection.suitableTitles({}, "pesho"), "Invalid input");
+      assert.throw(() => bookSelection.suitableTitles([{ title: "The Da Vinci Code", genre: "Thriller" }], 10), "Invalid input");
+      assert.throw(() => bookSelection.suitableTitles([{ title: "The Da Vinci Code", genre: "Thriller" }], []), "Invalid input");
+      assert.throw(() => bookSelection.suitableTitles([{ title: "The Da Vinci Code", genre: "Thriller" }], {}), "Invalid input");
+      assert.throw(() => bookSelection.suitableTitles({}, {}), "Invalid input");
+      assert.throw(() => bookSelection.suitableTitles(10, 10), "Invalid input");
+    });
+    it("Correct data", () => {
+      let input = [
+        { title: "The Da Vinci Code", genre: "Thriller" },
+        { title: "The Da Vinci Code1", genre: "Thriller" },
+        { title: "The Da Vinci Code2", genre: "Horror" },
+      ];
+      let result = ["The Da Vinci Code", "The Da Vinci Code1"]
+      assert.equal(bookSelection.suitableTitles(input, "Thriller").join(" "), result.join(" "))
+      result = ["The Da Vinci Code2"]
+      assert.equal(bookSelection.suitableTitles(input, "Horror").join(" "), result.join(" "))
+      result = [];
+      assert.equal(bookSelection.suitableTitles(input, "Comedy").join(" "), result.join(" "))
+    })
+  })
+});
+
+
+// Variant 2
+
 // const bookSelection = require("./bookSelection.js");
 // const assert = require("chai").assert;
 
@@ -108,150 +181,3 @@
 //   });
 // });
 
-let bookSelection = require("./bookSelection");
-let { expect, assert } = require("chai");
-
-describe(`bookSelection Tests`, () => {
-  describe("Test .isGenreSuitable(genre, age)", () => {
-    it('should return correct message if age is <= 12 and genre is "Thriller"', () => {
-      expect(bookSelection.isGenreSuitable("Thriller", 12)).to.equal(
-        "Books with Thriller genre are not suitable for kids at 12 age"
-      );
-    });
-    it('should return correct message if age is <= 12 and genre is "Horror"', () => {
-      expect(bookSelection.isGenreSuitable("Horror", 10)).to.equal(
-        "Books with Horror genre are not suitable for kids at 10 age"
-      );
-    });
-    it("should return correct message if age is > 12", () => {
-      expect(bookSelection.isGenreSuitable("Horror", 16)).to.equal(
-        "Those books are suitable"
-      );
-      expect(bookSelection.isGenreSuitable("Thriller", 13)).to.equal(
-        "Those books are suitable"
-      );
-    });
-  });
-  describe("Test .isItAffordable(price, budget)", () => {
-    //You need to validate the input, if the price and budget are not a number, throw an error: "Invalid input".
-    it("should throw error if price is not a number", () => {
-      assert.throws(
-        () => bookSelection.isItAffordable("twenty", 50),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.isItAffordable([], 50),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.isItAffordable({}, 50),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.isItAffordable(null, 50),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.isItAffordable(undefined, 50),
-        "Invalid input"
-      );
-    });
-
-    it("should throw error if budget is not a number", () => {
-      assert.throws(
-        () => bookSelection.isItAffordable(20, "fifty"),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.isItAffordable(30, []),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.isItAffordable(30, {}),
-        "Invalid input"
-      );
-      assert.throws(() => bookSelection.isItAffordable(30), "Invalid input");
-      assert.throws(
-        () => bookSelection.isItAffordable(30, undefined),
-        "Invalid input"
-      );
-    });
-
-    it("should return correct message if enough money", () => {
-      expect(bookSelection.isItAffordable(20, 20)).to.equal(
-        "Book bought. You have 0$ left"
-      );
-      expect(bookSelection.isItAffordable(20, 55)).to.equal(
-        "Book bought. You have 35$ left"
-      );
-    });
-
-    it("should return correct message if NOT enough money", () => {
-      expect(bookSelection.isItAffordable(30, 20)).to.equal(
-        "You don't have enough money"
-      );
-      expect(bookSelection.isItAffordable(20, 19.5)).to.equal(
-        "You don't have enough money"
-      );
-    });
-  });
-
-  describe("Test .suitableTitles(array, wantedGenre)", () => {
-    it("should throw error if array is NOT an array", () => {
-      assert.throws(
-        () => bookSelection.suitableTitles("array", "Horror"),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.suitableTitles(50, "Horror"),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.suitableTitles({}, "Horror"),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.suitableTitles(null, "Horror"),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.suitableTitles(undefined, "Horror"),
-        "Invalid input"
-      );
-    });
-    it("should throw error if genre is NOT string", () => {
-      assert.throws(
-        () => bookSelection.suitableTitles([], []),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.suitableTitles([], {}),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.suitableTitles([], 50),
-        "Invalid input"
-      );
-      assert.throws(
-        () => bookSelection.suitableTitles([], null),
-        "Invalid input"
-      );
-      assert.throws(() => bookSelection.suitableTitles([]), "Invalid input");
-    });
-
-    it("should work properly with valid data", () => {
-      let titles = [
-        { title: "The Da Vinci Code", genre: "Thriller" },
-        { title: "Lord Of The Rings", genre: "Fantasy" },
-        { title: "Pet Semetary", genre: "Thriller" },
-      ];
-      let expected = ["The Da Vinci Code", "Pet Semetary"];
-      expect(bookSelection.suitableTitles(titles, "Thriller")).to.deep.equal(
-        expected
-      );
-      expect(bookSelection.suitableTitles(titles, "Fantasy")).to.deep.equal([
-        "Lord Of The Rings",
-      ]);
-    });
-  });
-});
