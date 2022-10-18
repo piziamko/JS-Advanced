@@ -1,3 +1,5 @@
+//window.addEventListener("load", solve);
+
 function solve () {
     document.querySelector("button[type='submit']").addEventListener("click", createTask);
     
