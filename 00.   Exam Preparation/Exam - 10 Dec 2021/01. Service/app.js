@@ -1,52 +1,81 @@
-// window.addEventListener('load', solve);
-
-function solve() {
-    const POSSIBLE_PRODUCT_TYPES = ['Phone', 'Computer'];
-    const inputs = Array.from(document.querySelectorAll('select, textarea, input'));
-    const buttonSendForm = document.querySelector('#right button');
-    const buttonClear = document.querySelector('#completed-orders button');
-    const sectionReceivedOrders = document.getElementById('received-orders');
-    const sectionCompletedOrders = document.getElementById('completed-orders');
-
-    buttonSendForm.addEventListener('click', (e) => {
+function solve () {
+    document.querySelector("button[type='submit']").addEventListener("click", createTask);
+    
+    let productType = document.getElementById("type-product");
+    let description = document.getElementById("description");
+    let name = document.getElementById("client-name");
+    let phone = document.getElementById("client-phone");
+    let receiveSection = document.getElementById("received-orders");
+    let finishSection = document.getElementById("completed-orders");
+    let clearBtn = finishSection.querySelector("button");
+    clearBtn.addEventListener("click", clearTask);
+        
+    function createTask(e) {
+        // console.log("test")
         e.preventDefault();
-        const productType = inputs[0].value;
-        if (!POSSIBLE_PRODUCT_TYPES.includes(productType) || inputs.some(x => x.value.length === 0)) return;
-        const [description, clientName, clientPhone] = inputs.slice(1).map(x => x.value);
-        const divContainer = createAndAppendElementWithAttrs.bind(sectionReceivedOrders)('div', {className: 'container'}, true);
-        const buttonStart = createAndAppendElementWithAttrs.bind(divContainer)
-        ('h2', {textContent: `Product type for repair: ${productType}`})
-        ('h3', {textContent: `Client information: ${clientName}, ${clientPhone}`})
-        ('h4', {textContent: `Description of the problem: ${description}`})
-        ('button', {textContent: 'Start repair', className: 'start-btn'}, true);
-        const buttonFinish = createAndAppendElementWithAttrs.bind(divContainer)
-        ('button', {textContent: 'Finish repair', className: 'finish-btn', disabled: true}, true);
-        buttonStart.addEventListener('click', () => {
-            buttonStart.setAttribute('disabled', true);
-            buttonFinish.removeAttribute('disabled');
-        });
-        buttonFinish.addEventListener('click', () => {
-            buttonStart.remove();
-            buttonFinish.remove();
-            sectionCompletedOrders.appendChild(divContainer);
-        });
-        inputs.slice(1).forEach(x => x.value = '');
-    });
-
-
-    buttonClear.addEventListener('click', () => {
-        Array.from(sectionCompletedOrders.children).slice(3).forEach(x => x.remove());
-    });
-
-
-    function createAndAppendElementWithAttrs(elementName, kwargs, returnElement = false,) {
-        const el = document.createElement(elementName);
-        for (const attr in kwargs) {
-            kwargs[attr] === 'classList'
-                ? kwargs[attr].forEach(klass => el.className.add(klass))
-                : el[attr] = kwargs[attr];
+        let typeValue = productType.value;
+        let descriptionValue = description.value;
+        let nameValue = name.value;
+        let phoneValue = phone.value;
+        
+        if(!descriptionValue || !nameValue || !phoneValue) {
+            return;
         }
-        this.appendChild(el);
-        return returnElement ? el : createAndAppendElementWithAttrs.bind(this);
+        
+        description.value = "";
+        name.value = "";
+        phone.value = "";
+        
+        createOrder(typeValue, descriptionValue, nameValue, phoneValue)
+    }
+    function createOrder(typeValue, descriptionValue, nameValue, phoneValue){
+        let divContainer = document.createElement("div");
+        divContainer.classList.add("container");
+        
+        let h2 = document.createElement("h2");
+        h2.textContent = `Product type for repair: ${typeValue}`;
+        
+        let h3 = document.createElement("h3");
+        h3.textContent = `Client information: ${nameValue}, ${phoneValue}`;
+        
+        let h4 = document.createElement("h4");
+        h4.textContent = `Description of the problem: ${descriptionValue}`;
+        
+        let startBtn = document.createElement("button");
+        startBtn.classList.add("start-btn");
+        startBtn.textContent = "Start repair";
+        startBtn.addEventListener("click", startRepair);
+        
+        
+        let finishBtn = document.createElement("button");
+        finishBtn.classList.add("finish-btn");
+        finishBtn.addEventListener("click", finishTask);
+        finishBtn.setAttribute("disabled", true);
+        finishBtn.textContent = "Finish repair";
+        
+        divContainer.appendChild(h2);
+        divContainer.appendChild(h3);
+        divContainer.appendChild(h4);
+        divContainer.appendChild(startBtn);
+        divContainer.appendChild(finishBtn);
+        receiveSection.appendChild(divContainer);
+    }
+    function startRepair(e){
+        e.target.setAttribute("disabled", true);
+        let finishBtn = e.target.parentElement.getElementsByClassName("finish-btn")[0];
+        finishBtn.disabled = false;
+    }
+    function finishTask(e) {
+        let divContainer = e.target.parentElement;
+        finishSection.appendChild(divContainer);
+        let btns = divContainer.querySelectorAll("button");
+        btns[0].remove();
+        btns[1].remove();
+    }
+    function clearTask(e){
+        let containers = finishSection.querySelectorAll(".container");
+        
+        Array.from(containers).forEach(container => container.remove());
+        
     }
 }
