@@ -29,6 +29,7 @@ class VegetableStore {
         this.availableProducts.forEach(product => buff.push(product.type));
         return `Successfully added ${buff.join(", ")}`
     }
+    
     buyingVegetables (selectedProducts) {
       let totalPrice = 0;
       selectedProducts.forEach(data => {
@@ -59,6 +60,7 @@ class VegetableStore {
       }
       return `Some quantity of the ${type} has been removed.`
     }
+    
     revision () {
       let buff = `Available vegetables:\n`
       this.availableProducts.sort((a, b) => a.price - b.price)
@@ -68,20 +70,11 @@ class VegetableStore {
     }
 }
 
+
+
 // let vegStore = new VegetableStore("Jerrie Munro", "1463 Pette Kyosheta,Sofia");
-// console.log(vegStore.loadingVegetables(["Okra 2.5 3.5", "Beans 10 2.8", "Celery 5.5 2.2", "Celery 0.5 2.5"])); 
-
-let vegStore = new VegetableStore("Jerrie Munro", "1463 Pette Kyosheta,Sofia");
-console.log(vegStore.loadingVegetables(["Okra 2.5 3.5", "Beans 10 2.8","Celery 5.5 2.2", "Celery 0.5 2.5"]));
-console.log(vegStore.rottingVegetable("Okra", 1));
-console.log(vegStore.rottingVegetable("Okra", 2.5));
-console.log(vegStore.buyingVegetables(["Beans 8", "Celery 1.5"]));
-console.log(vegStore.revision()); 
-
-
-// let vegStore = new VegetableStore("Jerrie Munro", "1463 Pette Kyosheta, Sofia");
-// console.log(vegStore.loadingVegetables(["Okra 2.5 3.5", "Beans 10 2.8", "Celery 5.5 2.2", "Celery 0.5 2.5"]));
+// console.log(vegStore.loadingVegetables(["Okra 2.5 3.5", "Beans 10 2.8","Celery 5.5 2.2", "Celery 0.5 2.5"]));
 // console.log(vegStore.rottingVegetable("Okra", 1));
 // console.log(vegStore.rottingVegetable("Okra", 2.5));
 // console.log(vegStore.buyingVegetables(["Beans 8", "Celery 1.5"]));
-// console.log(vegStore.revision());
+// console.log(vegStore.revision()); 
